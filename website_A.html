@@ -202,7 +202,7 @@ h3.mid {
 /* video background */
 .hero-video-wrap {
   position: absolute; inset: 0; z-index: 0;
-  background: var(--ink); /* fallback */
+  background: linear-gradient(135deg, #1C1A17 0%, #2A2620 40%, #1C1A17 100%);
 }
 .hero-video-wrap video {
   width: 100%; height: 100%;
@@ -779,11 +779,12 @@ footer {
   <div class="hero-video-wrap">
     <video
       autoplay muted loop playsinline
-      poster="documenten/Incentive Select/WebsiteIS/Media/hero-poster.jpg"
+      poster="Media/hero-poster.jpg"
       aria-hidden="true"
+      style="opacity:0; transition: opacity 1s ease;"
     >
-      <source src="documenten/Incentive Select/WebsiteIS/Media/hero-video.mp4" type="video/mp4">
-      <source src="documenten/Incentive Select/WebsiteIS/Media/hero-video.webm" type="video/webm">
+      <source src="Media/hero-video.mp4" type="video/mp4">
+      <source src="Media/hero-video.webm" type="video/webm">
     </video>
   </div>
   <div class="hero-overlay"></div>
@@ -903,11 +904,10 @@ footer {
       </div>
     </div>
     <div class="tb-media">
-      <!-- Foto: documenten/Incentive Select/WebsiteIS/Media/thema-steden.jpg
-           Video: documenten/Incentive Select/WebsiteIS/Media/thema-steden.mp4 -->
+      <!-- Plaatsen: Media/thema-steden.jpg (of .mp4 voor video) -->
       <div class="tb-media-placeholder">
         <div class="ph-icon">I</div>
-        <div class="ph-text">Steden<br>documenten/Incentive Select/<br>WebsiteIS/Media/thema-steden.jpg</div>
+        <div class="ph-text">Plaatsen hier:<br>Media/thema-steden.jpg</div>
       </div>
       <div class="tb-media-label">Steden Incentive</div>
     </div>
@@ -942,10 +942,10 @@ footer {
       </div>
     </div>
     <div class="tb-media">
-      <!-- Foto: documenten/Incentive Select/WebsiteIS/Media/thema-sporten.jpg -->
+      <!-- Plaatsen: Media/thema-sporten.jpg -->
       <div class="tb-media-placeholder">
         <div class="ph-icon">II</div>
-        <div class="ph-text">Sporten<br>documenten/Incentive Select/<br>WebsiteIS/Media/thema-sporten.jpg</div>
+        <div class="ph-text">Plaatsen hier:<br>Media/thema-sporten.jpg</div>
       </div>
       <div class="tb-media-label">Sport Incentive</div>
     </div>
@@ -980,10 +980,10 @@ footer {
       </div>
     </div>
     <div class="tb-media">
-      <!-- Foto: documenten/Incentive Select/WebsiteIS/Media/thema-avontuur.jpg -->
+      <!-- Plaatsen: Media/thema-avontuur.jpg -->
       <div class="tb-media-placeholder">
         <div class="ph-icon">III</div>
-        <div class="ph-text">Avontuur<br>documenten/Incentive Select/<br>WebsiteIS/Media/thema-avontuur.jpg</div>
+        <div class="ph-text">Plaatsen hier:<br>Media/thema-avontuur.jpg</div>
       </div>
       <div class="tb-media-label">Avontuur Incentive</div>
     </div>
@@ -1018,10 +1018,10 @@ footer {
       </div>
     </div>
     <div class="tb-media">
-      <!-- Foto: documenten/Incentive Select/WebsiteIS/Media/thema-architectuur.jpg -->
+      <!-- Plaatsen: Media/thema-architectuur.jpg -->
       <div class="tb-media-placeholder">
         <div class="ph-icon">IV</div>
-        <div class="ph-text">Architectuur<br>documenten/Incentive Select/<br>WebsiteIS/Media/thema-architectuur.jpg</div>
+        <div class="ph-text">Plaatsen hier:<br>Media/thema-architectuur.jpg</div>
       </div>
       <div class="tb-media-label">Architectuur Incentive</div>
     </div>
@@ -1310,6 +1310,63 @@ if (scrollInd) {
     scrollInd.style.transition = 'opacity .4s';
   }, { passive: true });
 }
+
+/* ── Hero video: verberg placeholder zodra video laadt ── */
+const heroVideo = document.querySelector('.hero-video-wrap video');
+if (heroVideo) {
+  const checkVideo = () => {
+    if (heroVideo.readyState >= 2) {
+      heroVideo.style.opacity = '1';
+    }
+  };
+  heroVideo.addEventListener('loadeddata', checkVideo);
+  heroVideo.addEventListener('canplay', checkVideo);
+  // Probeer te laden
+  heroVideo.load();
+}
+
+/* ── Themafoto's: laad img als bestand bestaat ── */
+const mediaFiles = [
+  { panel: 0, src: 'Media/thema-steden.jpg',       alt: 'Steden incentive' },
+  { panel: 1, src: 'Media/thema-sporten.jpg',      alt: 'Sport incentive'  },
+  { panel: 2, src: 'Media/thema-avontuur.jpg',     alt: 'Avontuur incentive' },
+  { panel: 3, src: 'Media/thema-architectuur.jpg', alt: 'Architectuur incentive' },
+];
+const mediaPanels = document.querySelectorAll('.tb-media');
+mediaFiles.forEach(({ panel, src, alt }) => {
+  const el = mediaPanels[panel];
+  if (!el) return;
+  const img = new Image();
+  img.onload = () => {
+    img.alt = alt;
+    img.className = 'dest-media';
+    img.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;transition:transform .6s ease;';
+    const ph = el.querySelector('.tb-media-placeholder');
+    if (ph) ph.style.display = 'none';
+    el.insertBefore(img, el.firstChild);
+  };
+  img.src = src;
+});
+
+/* ── Bestemmingsfoto's laden ── */
+const destFiles = [
+  'Media/dest-lissabon.jpg',
+  'Media/dest-monaco.jpg',
+  'Media/dest-schotland.jpg',
+  'Media/dest-lapland.jpg',
+  'Media/dest-barcelona.jpg',
+];
+document.querySelectorAll('.dest').forEach((dest, i) => {
+  if (!destFiles[i]) return;
+  const img = new Image();
+  img.onload = () => {
+    img.className = 'dest-media';
+    const ph = dest.querySelector('.dest-ph');
+    if (ph) ph.style.display = 'none';
+    dest.insertBefore(img, dest.firstChild);
+  };
+  img.src = destFiles[i];
+});
 </script>
 
 </body>
