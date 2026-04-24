@@ -121,8 +121,16 @@ h3.mid {
   background: var(--ink);
   border-bottom: 1px solid rgba(168,134,74,.18);
 }
-.subnav-inner {
+/* The .wrap inside subnav must fill the full height */
+.subnav .wrap,
+.nav .wrap {
   height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.subnav-inner {
+  width: 100%;
   display: flex; align-items: center; justify-content: space-between;
 }
 .subnav-left {
@@ -132,10 +140,10 @@ h3.mid {
   font-family: var(--J); font-size: 10px; font-weight: 400;
   letter-spacing: 1.5px; text-transform: uppercase;
   color: rgba(247,243,236,.45); text-decoration: none;
-  transition: color .2s;
+  transition: color .2s; line-height: 1;
 }
 .subnav-left a:hover { color: var(--gold-light); }
-.subnav-divider { color: rgba(168,134,74,.25); font-size: 10px; }
+.subnav-divider { color: rgba(168,134,74,.25); font-size: 10px; line-height: 1; }
 
 .subnav-right {
   display: flex; align-items: center; gap: 20px;
@@ -144,10 +152,10 @@ h3.mid {
   font-family: var(--J); font-size: 10px; font-weight: 400;
   letter-spacing: 1.5px; color: rgba(247,243,236,.45);
   text-decoration: none; transition: color .2s;
-  display: flex; align-items: center; gap: 6px;
+  display: flex; align-items: center; gap: 6px; line-height: 1;
 }
 .subnav-right a:hover { color: var(--gold-light); }
-.subnav-right a svg { width: 12px; height: 12px; opacity: .5; }
+.subnav-right a svg { width: 12px; height: 12px; opacity: .5; flex-shrink: 0; }
 
 @media (max-width: 900px) { .subnav { display: none; } }
 
@@ -164,9 +172,9 @@ h3.mid {
 }
 .nav.scrolled { box-shadow: 0 4px 32px rgba(28,26,23,.08); }
 
-/* nav-inner: flex gecentreerd over de hoogte */
+/* nav-inner: volle breedte, items gecentreerd over hoogte */
 .nav-inner {
-  height: 100%;
+  width: 100%;
   display: flex; align-items: center; justify-content: space-between; gap: 24px;
 }
 
@@ -239,7 +247,9 @@ h3.mid {
 .hero {
   height: 100vh; min-height: 640px;
   position: relative; overflow: hidden;
-  display: flex; align-items: flex-end;
+  display: flex;
+  flex-direction: column;       /* stack vertically */
+  justify-content: flex-end;   /* push content to bottom */
   padding-top: var(--nav-h);
 }
 
@@ -287,8 +297,9 @@ h3.mid {
 .hero-content {
   position: relative; z-index: 2;
   padding-bottom: 80px;
-  max-width: 720px;
+  max-width: 680px;
   text-align: left;
+  /* No margin: auto — stays at left edge of wrap container */
 }
 
 .hero-eyebrow {
@@ -886,18 +897,20 @@ footer {
 
   <div class="hero-corner"><div class="hero-corner-dot"></div></div>
 
-  <div class="hero-content wrap">
-    <p class="hero-eyebrow">Curated Travel Experiences</p>
-    <h1>
-      De wereld<br>
-      <em>als beloning.</em>
-    </h1>
-    <p class="hero-sub">
-      Incentive Select ontwerpt en begeleidt zakelijke groepsreizen die motiveren, verbinden en lang worden herinnerd. Steden, sport, avontuur of architectuur — altijd volledig op maat.
-    </p>
-    <div class="hero-actions">
-      <a href="#themas" class="btn-ivory">Ontdek de thema's</a>
-      <a href="#aanpak" class="btn-outline-ivory">Hoe het werkt →</a>
+  <div class="wrap" style="width:100%; display:flex; align-items:flex-end; padding-bottom:0; flex:1;">
+    <div class="hero-content">
+      <p class="hero-eyebrow">Curated Travel Experiences</p>
+      <h1>
+        De wereld<br>
+        <em>als beloning.</em>
+      </h1>
+      <p class="hero-sub">
+        Incentive Select ontwerpt en begeleidt zakelijke groepsreizen die motiveren, verbinden en lang worden herinnerd. Steden, sport, avontuur of architectuur — altijd volledig op maat.
+      </p>
+      <div class="hero-actions">
+        <a href="#themas" class="btn-ivory">Ontdek de thema's</a>
+        <a href="#aanpak" class="btn-outline-ivory">Hoe het werkt →</a>
+      </div>
     </div>
   </div>
 
